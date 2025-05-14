@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task-Management-Application</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading" >Register</h1>
+        <form id="registerform" >
+     <input type="text" id="name" placeholder="Name" required ><br/><br/>
+     <input type="email" id="email" placeholder="Email" required ><br/><br/>
+     <input type="password" id="password" placeholder="Password" required ><br/><br/>
+     <button type="submit" >Submit</button>
+        </form>
+        <h5 >OR</h5>
+        <div class="link">
+        <a href="login.html" >Login</a>
+     </div>
+        <div id="message"></div>
+
+        <!-- <nav style="text-align: center; margin-bottom: 20px;">
+            <a href="login.html">Login</a> |
+            <a href="profile.html">Update Profile</a> |
+            <a href="createtask.html">Create Task</a> |
+            <a href="gettask.html">Get Task</a> |
+            <a href="updatetask.html">Update Task</a> |
+            <a href="deletetask.html">Delete Task</a>
+        </nav> -->
+        
+    </div>
+   
+   <script>
+    const form = document.getElementById('registerform');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit',async(e) =>{
+        e.preventDefault();
+
+        const name=document.getElementById('name').value;
+        const email=document.getElementById('email').value;
+        const password=document.getElementById('password').value;
+
+        try{
+const response = await fetch('http://localhost:5000/api/auth/register',{
+    method : 'POST',
+    headers : {
+        'Content-Type' : 'application/json'
+    },
+    body : JSON.stringify({name,email,password})
+});
+
+const data= await response.json();
+
+if(response.ok){
+    // message.innerHTML= `<p style="color : green;">Registration Successful And User_Id : ${data._id}</p>`;
+    message.innerHTML= `<p style="color : green;">Registration Successful</p>`;
+}
+else{
+    message.innerHTML=`<p style="color : red;"> Not successful : ${data.message}</p>`;
+}
+        }
+catch(error){
+    message.innerHTML=`<p style="color : red;"> Network issue: ${error.message}</p>`;
+}
+    });
+   </script>
+</body>
+</html>

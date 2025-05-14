@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Task</title>
+</head>
+<body >
+    <div class="container">
+        <h1 class="heading" >Create Task</h1>
+        <form id="taskform" >
+            <input type="text" id="title" placeholder="Title" required ><br/><br/>
+            <input type="text" id="description" placeholder="Description" required ><br/><br/>
+            <input type="email" id="email" placeholder="Email" required ><br/><br/>
+            <!-- <input type="text" id="token" placeholder="JWT Token" required ><br/><br/> -->
+            <button type="submit" >Create Task</button>
+                </form><br/><br/>
+
+                <nav style="text-align: center; margin-bottom: 20px;">
+                    <a href="login.html">Login</a> |
+                    <a href="profile.html">Update Profile</a> |
+                   
+                    <a href="gettask.html">Get Task</a> |
+                    <a href="updatetask.html">Update Task</a> |
+                    <a href="deletetask.html">Delete Task</a>
+                </nav>
+    </div>
+    
+
+            <script>
+                document.getElementById('taskform').addEventListener('submit',async function(e) {
+                    e.preventDefault();
+
+                    const title=document.getElementById('title').value;
+                    const description=document.getElementById('description').value;
+                    const email=document.getElementById('email').value;
+                    // const token=document.getElementById('token').value;
+                    const token=localStorage.getItem('token');
+
+                    try{
+                        const response = await fetch('http://localhost:5000/api/task',{
+                            method : 'POST',
+                            headers :{
+                                'Content-Type' : 'application/json',
+                                'Authorization' : `Bearer ${token}`
+                            },
+                            body : JSON.stringify({title,description,email})
+                        });
+
+                        const data = await response.json();
+
+                        if(response.ok){
+                            alert("Task created and email sent");
+                            document.getElementById('taskform').reset();
+                        }
+                        else{
+                            alert("Task creation failed");
+                        }
+                    }
+                    catch(error){
+                        console.error(error);
+                        alert("Server error");
+                    }
+                })
+            </script>
+</body>
+</html>

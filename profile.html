@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Update Profile</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading" >Update Profile</h1>
+        <form id="updateprofile" >
+            <input type="text" id="name" placeholder="Name" required ><br/><br/>
+            <input type="email" id="email" placeholder="Email" required ><br/><br/>
+            <!-- <input type="text" id="token" placeholder="JWT token" required ><br/><br/> -->
+            <button type="submit" >Update</button>
+        </form>    
+        <div id="message"></div>
+    </div>  
+
+    <script>
+
+        document.getElementById('updateprofile').addEventListener('submit',async(e) =>{
+e.preventDefault();
+
+const name=document.getElementById('name').value;
+const email=document.getElementById('email').value;
+// const token=document.getElementById('token').value;
+const token=localStorage.getItem('token');
+
+try{
+    const response = await fetch('http://localhost:5000/api/auth/profile',{
+        method : 'PUT',
+        headers : {
+            'Content-Type' : 'application/json',
+            'Authorization' : `Bearer ${token}`
+        },
+        body : JSON.stringify({name,email})
+    });
+
+    const data = await response.json();
+    if(response.ok){
+        message.innerHTML=`<p style='color : green;'> Profile Updated </p>`;
+    }
+    else{
+        message.innerHTML=`<p style='color : red;'> Profile not updated</p>`;
+    }
+    // document.getElementById('message').innerText=JSON.stringify(data,null,2);
+}
+catch(error){
+document.getElementById('message').innerText= 'Error';
+}
+        });
+    </script>
+</body>
+</html>

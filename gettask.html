@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Get Task</title>
+</head>
+<body >
+    <div class="container">
+        <h1 class="heading" >Get Task</h1>
+        <form id="gettasks">       
+            <!-- <input type="text" id="token" placeholder="JWT Token" required ><br/><br/> -->
+            <button type="submit" >Click me</button>
+        </form>
+        
+        <div id="message"></div>
+    </div>
+
+    <script>
+     document.getElementById('gettasks').addEventListener('submit',async function(e) {
+        e.preventDefault();
+
+        // const token= document.getElementById('token').value;
+        const token= localStorage.getItem('token');
+        try{
+            const response= await fetch('http://localhost:5000/api/GetTask',{
+                method : 'GET',
+                headers : {
+                    'Content-Type' : 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data= await response.json();
+
+            if(response.ok){
+                localStorage.setItem('id',data._id);
+                //document.getElementById('gettasks');
+                //document.getElementById('message').innerText=JSON.stringify(data,null,2);
+
+               let html = '<ul>';
+                data.forEach(task => {
+                    html+=`<li><strong>Title:</strong>${task.title}</li><br/><li><strong>Description:</strong>${task.description}</li><br/><li><strong>ID:</strong>${task._id}</li><br/>`
+                });
+                html+='</ul>';
+                document.getElementById('message').innerHTML=html;
+            }
+            else{
+                alert("Getting task info. failed");
+            }
+        }
+        catch(error){
+            console.error(error);
+            alert("Error");
+        }
+
+     })
+    </script>
+</body>
+</html>

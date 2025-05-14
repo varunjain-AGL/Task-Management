@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Update Task</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="heading" >Update Task</h1>
+        <form id="updatetask" >
+            <input type="text" id="title" placeholder="Title" required ><br/><br/>
+            <input type="text" id="description" placeholder="Description" required ><br/><br/>
+            <!-- <input type="text" id="token" placeholder="JWT token" required ><br/><br/> -->
+            <input type="text" id="taskid" placeholder="ID" required ><br/><br/>
+            <button type="submit" >Update</button>
+        </form>
+    
+        <div id="message"></div>
+    </div>   
+        <script>
+    
+            document.getElementById('updatetask').addEventListener('submit',async(e) =>{
+    e.preventDefault();
+    
+    const title=document.getElementById('title').value;
+    const description=document.getElementById('description').value;
+    // const token=document.getElementById('token').value;
+    const token=localStorage.getItem('token');
+    const taskid=document.getElementById('taskid').value;
+    
+    try{
+        const response = await fetch(`http://localhost:5000/api/tasks/${taskid}`,{
+            method : 'PUT',
+            headers : {
+                'Content-Type' : 'application/json',
+                'Authorization' : `Bearer ${token}`
+            },
+            body : JSON.stringify({title,description})
+        });
+    
+        const data = await response.json();
+       // document.getElementById('message').innerText=JSON.stringify(data,null,2);
+       const html=`<ul>
+        <li><strong>New Title: </strong>${data.title}</li>
+        <li><strong>New Description: </strong>${data.description}</li>
+        </ul`;
+        document.getElementById('message').innerHTML=html;
+    }
+    catch(error){
+    document.getElementById('message').innerText= 'Error';
+    }
+            });
+        </script>
+</body>
+</html>
